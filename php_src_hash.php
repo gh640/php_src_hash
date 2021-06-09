@@ -5,8 +5,7 @@
  * Generate and print hash values of PHP files in specified directories.
  * This helps to confirm code behavior doesn't change after changing comments.
  *
- * - Comments are excluded.
- * - Continuous spaces are merged.
+ * - Comments and spaces are excluded.
  */
 
 const EXTENSIONS = [
@@ -18,8 +17,7 @@ const EXTENSIONS = [
 const TOKENS_TO_IGNORE = [
 	T_COMMENT,
 	T_DOC_COMMENT,
-];
-const TOKENS_SPACE = [
+	// Whitespaces can be ignored as well.
 	T_WHITESPACE,
 ];
 
@@ -96,7 +94,17 @@ function is_target(string $path): bool
  */
 function calc_token_hash(string $path): string 
 {
-	$tokens = token_get_all(file_get_contents($path));
+	$content = file_get_contents($path);
+	$tokens = extract_tokens($content);
+	return hash('sha256', implode(' ', $tokens));
+}
+
+/**
+ * Extract tokens from code.
+ */
+function extract_tokens(string $content): array 
+{
+	$tokens = token_get_all($content);
 	$filtered_tokens = [];
 	foreach ($tokens as $token) {
 		if (is_array($token)) {
@@ -107,21 +115,11 @@ function calc_token_hash(string $path): string
 				continue;
 			}
 
-			// Convert continuous spaces to a space character.
-			if (in_array($token_index, TOKENS_SPACE, true)) {
-				$last_part = end($filtered_tokens);
-				if ($last_part === ' ') {
-					continue;
-				} else {
-					$part = ' ';
-				}
-			}
-
 			$filtered_tokens[] = $part;
 		} else {
 			$filtered_tokens[] = $token;
 		}
 	}
 
-	return hash('sha256', implode('', $filtered_tokens));
+	return $filtered_tokens;
 }
