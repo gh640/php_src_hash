@@ -1,6 +1,6 @@
 # PHP source hash 
 
-A simple script to calculate and print hash values for PHP source files.
+A simple PHP script to calculate and print hash values for PHP source files. This can help to check if two source files are semantically equivalent.
 
 ## Usage
 
@@ -11,7 +11,8 @@ php php_src_hash.php [target_directory]
 ## Example
 
 ```bash
-php php_src_hash.php examples
-examples/hello.php: 9c9a59997bec49a08a81ba1f672aee137e8717a35da3b392fda2d4edee8fb0b0
-examples/hello_with_comments.php: 9c9a59997bec49a08a81ba1f672aee137e8717a35da3b392fda2d4edee8fb0b0
+$ php php_src_hash.php examples
+examples/hello.php: bcad0f62cf3de37aee03ca80ca877b027997297808ca806a77d648f6ee03d143
+examples/hello_with_comments.php: bcad0f62cf3de37aee03ca80ca877b027997297808ca806a77d648f6ee03d143
+examples/hello_with_minimal_spaces.php: bcad0f62cf3de37aee03ca80ca877b027997297808ca806a77d648f6ee03d143
 ```

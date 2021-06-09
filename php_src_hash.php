@@ -20,6 +20,10 @@ const TOKENS_TO_IGNORE = [
 	// Whitespaces can be ignored as well.
 	T_WHITESPACE,
 ];
+const TOKENS_TO_STRIP = [
+	T_OPEN_TAG,
+	T_CLOSE_TAG,
+];
 
 main();
 
@@ -113,6 +117,11 @@ function extract_tokens(string $content): array
 
 			if (in_array($token_index, TOKENS_TO_IGNORE, true)) {
 				continue;
+			}
+
+			if (in_array($token_index, TOKENS_TO_STRIP, true)) {
+				$part = mb_ereg_replace('^\s+', '', $token[1]);	
+				$part = mb_ereg_replace('\s+$', '', $part);	
 			}
 
 			$filtered_tokens[] = $part;
